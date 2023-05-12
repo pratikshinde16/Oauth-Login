@@ -1,27 +1,36 @@
-const router = require("express").Router();
-const { User, validate } = require("../models/user");
-const bcrypt = require("bcrypt");
+import express from "express";
+import {
+  updateUser,
+  deleteUser,
+  getUser,
+  getUsers,
+} from "../controllers/user.js";
+import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
 
-router.post("/", async (req, res) => {
-	try {
-		const { error } = validate(req.body);
-		if (error)
-			return res.status(400).send({ message: error.details[0].message });
+const router = express.Router();
 
-		const user = await User.findOne({ email: req.body.email });
-		if (user)
-			return res
-				.status(409)
-				.send({ message: "User with given email already Exist!" });
+// router.get("/checkauthentication", verifyToken, (req,res,next)=>{
+//   res.send("hello user, you are logged in")
+// })
 
-		const salt = await bcrypt.genSalt(Number(process.env.SALT));
-		const hashPassword = await bcrypt.hash(req.body.password, salt);
+// router.get("/checkuser/:id", verifyUser, (req,res,next)=>{
+//   res.send("hello user, you are logged in and you can delete your account")
+// })
 
-		await new User({ ...req.body, password: hashPassword }).save();
-		res.status(201).send({ message: "User created successfully" });
-	} catch (error) {
-		res.status(500).send({ message: "Internal Server Error" });
-	}
-});
+// router.get("/checkadmin/:id", verifyAdmin, (req,res,next)=>{
+//   res.send("hello admin, you are logged in and you can delete all accounts")
+// })
 
-module.exports = router;
+//UPDATE
+router.put("/:id", verifyUser, updateUser);
+
+//DELETE
+router.delete("/:id", verifyUser, deleteUser);
+
+//GET
+router.get("/:id", verifyUser, getUser);
+
+//GET ALL
+router.get("/", verifyAdmin, getUsers);
+
+export default router;

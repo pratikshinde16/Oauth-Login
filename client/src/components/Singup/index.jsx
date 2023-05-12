@@ -5,25 +5,27 @@ import styles from "./styles.module.css";
 
 const Signup = () => {
 	const [data, setData] = useState({
-		firstName: "",
-		lastName: "",
+		fname: "",
+		lname: "",
 		email: "",
 		password: "",
 	});
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 
-	const handleChange = ({ currentTarget: input }) => {
-		setData({ ...data, [input.name]: input.value });
-	};
+	const handleChange = (e) => {
+		setData({ ...data, [e.target.name]: e.target.value });
+	  };
+	
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "http://localhost:8080/api/users";
-			const { data: res } = await axios.post(url, data);
-			navigate("/login");
-			console.log(res.message);
+			const url = "http://localhost:8000/server/auth/register";
+			const response = await axios.post(url, data);
+			// navigate("/login");
+			// console.log(res.message);
+			console.log(response.data)
 		} catch (error) {
 			if (
 				error.response &&
@@ -52,18 +54,18 @@ const Signup = () => {
 						<input
 							type="text"
 							placeholder="First Name"
-							name="firstName"
+							name="fname"
 							onChange={handleChange}
-							value={data.firstName}
+							value={data.fname}
 							required
 							className={styles.input}
 						/>
 						<input
 							type="text"
 							placeholder="Last Name"
-							name="lastName"
+							name="lname"
 							onChange={handleChange}
-							value={data.lastName}
+							value={data.lname}
 							required
 							className={styles.input}
 						/>
