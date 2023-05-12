@@ -32,7 +32,7 @@ const Signup = () => {
 				error.response.status >= 400 &&
 				error.response.status <= 500
 			) {
-				setError(error.response.data.message);
+				setError(error.response.data.message);	
 			}
 		}
 	};
@@ -43,7 +43,7 @@ const Signup = () => {
 				<div className={styles.left}>
 					<h1>Welcome Back</h1>
 					<Link to="/login">
-						<button type="button" className={styles.white_btn}>
+			 			<button type="button" className={styles.white_btn}>
 							Sing in
 						</button>
 					</Link>
